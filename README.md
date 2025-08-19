@@ -47,7 +47,7 @@ Bu depo, Docker Compose kullanarak Elasticsearch ve Kibana'yı kurmak ve Filebea
     ```
 
 2.  **Konfigürasyonları Yapma:**
-    Filebeat konfigürasyon dosyasını açın. Eğer Kibana ve Elasticsearch'e şifre koymadıysanız, aşağıdakileri dosyanın sonuna ekleyin.
+    Filebeat konfigürasyon dosyasını açın. Eğer Kibana ve Elasticsearch'e şifre koymadıysanız, aşağıdaki değişiklikleri yapın.
     ```bash
     sudo nano /etc/filebeat/filebeat.yml
     ```
