@@ -24,7 +24,7 @@ Bu depo, Docker Compose kullanarak Elasticsearch ve Kibana'yı kurmak ve Filebea
 
 1.  Bu depoyu yerel makinenize klonlayın:
     ```bash
-    git clone [https://github.com/YunusEmreDere/elk-netflow-monitoring](https://github.com/YunusEmreDere/elk-netflow-monitoring)
+    git clone https://github.com/YunusEmreDere/elk-netflow-monitoring
     ```
 
 2.  Proje dizinine gidin:
