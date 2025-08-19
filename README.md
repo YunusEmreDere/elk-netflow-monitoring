@@ -1,104 +1,98 @@
-## Proje Adı:
-ELK Stack ile Netflow Trafiğini izleme
+# ELK Stack ile Netflow Trafik İzleme
 
-## Özellikler:
--Routerdan gelen netflow verilerini Filebeat kullanarak porttan alır
--ElastikSearch ve Kibana kullanılarak bu veriler görselleştirilir.
--ElasticSearch üzerinden filtrelemeler ile istenilen şekilde kullanılabilinir.
+Bu depo, Docker Compose kullanarak Elasticsearch ve Kibana'yı kurmak ve Filebeat aracılığıyla ağınızdaki NetFlow trafiğini izlemek için gerekli konfigürasyonları içerir.
 
-## Bu projeyi çalıştırmak için gerekli olanlar:
-* [Docker](https://docs.docker.com/get-docker/)
-* [Docker Compose](https://docs.docker.com/compose/install/)
+**Not:** Bu kurulumda Elasticsearch ve Kibana Docker konteynerleri içinde, Filebeat ise ana makineye kurulmuştur.
+
+---
+
+### Özellikler
+* Router'dan gelen NetFlow verilerini Filebeat kullanarak porttan alır.
+* Elasticsearch ve Kibana kullanılarak bu veriler görselleştirilir.
+* Kibana üzerinden filtrelemeler ile veriler istenilen şekilde incelenebilir.
+
+---
+
+### Gereksinimler
+* [**Docker**](https://docs.docker.com/get-docker/)
+* [**Docker Compose**](https://docs.docker.com/compose/install/)
 * Git (Kodları klonlamak için)
 
-## Kurulum:
-1.  Bu depoyu (repository) yerel makinenize klonlayın:
+---
+
+### Kurulum
+
+1.  Bu depoyu yerel makinenize klonlayın:
     ```bash
-    git clone https://github.com/YunusEmreDere/elk-netflow-monitoring
+    git clone [https://github.com/YunusEmreDere/elk-netflow-monitoring](https://github.com/YunusEmreDere/elk-netflow-monitoring)
     ```
+
 2.  Proje dizinine gidin:
     ```bash
-    cd projeadi
+    cd elk-netflow-monitoring
     ```
+
 3.  Servisleri başlatın:
     ```bash
     docker compose up -d
     ```
 
-## 💻 Kullanım
--Docker konteynırı başlatıldıktan sonra Filebeat kurulumu aşamasına geçilmelidir.
+### Kullanım
 
-1.  Filebeat indirimi ve kurulumu
+1.  **Filebeat İndirme ve Kurulumu:**
+    Ana makinenize Filebeat'i indirin ve kurun.
     ```bash
-    curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.15.0-amd64.deb
+    wget [https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.15.0-amd64.deb](https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.15.0-amd64.deb)
     sudo dpkg -i filebeat-8.15.0-amd64.deb
     ```
-2.Konfigurasyonların yapılması
--filebeat.yml dosyasına gidilmelidir. 
+
+2.  **Konfigürasyonları Yapma:**
+    Filebeat konfigürasyon dosyasını açın. Eğer Kibana ve Elasticsearch'e şifre koymadıysanız, aşağıdakileri dosyanın sonuna ekleyin.
     ```bash
     sudo nano /etc/filebeat/filebeat.yml
     ```
-    
-    ```bash
-    
-    reload.enabled: true
-    
-    reload.period: 10s
-    
+    ```yaml
+    # ... dosyanın sonuna ekleyin
+
     setup.kibana:
-    hosts: ["Your_ip_address:5601"]
+      hosts: ["localhost:5601"]
 
     output.elasticsearch:
-    hosts: ["Your_ip_address:9200"]
+      hosts: ["localhost:9200"]
     ```
-Olarak değiştirilmelidir.
 
-3. Netflow modülünü etkinleştirme:
-   
-   ```bash
+3.  **NetFlow Modülünü Etkinleştirme:**
+    NetFlow modülünü etkinleştirin.
+    ```bash
     sudo filebeat modules enable netflow
     ```
-
--netflow.yml dosyasına gidilmelidir.
+    Ardından `netflow.yml` dosyasını açarak NetFlow veri akışını dinleyeceği portu belirtin.
     ```bash
     sudo nano /etc/filebeat/modules.d/netflow.yml
     ```
-
-    ```bash
-    # Module: netflow
-    # Docs: https://www.elastic.co/guide/en/beats/filebeat/main/filebeat-module-net>
-
+    ```yaml
     - module: netflow
       log:
         enabled: true
         var:
           netflow_host: 0.0.0.0
           netflow_port: 2055
-        # internal_networks specifies which networks are considered internal or p>
-        # you can specify either a CIDR block or any of the special named ranges >
-        # at: https://www.elastic.co/guide/en/beats/filebeat/current/defining-pro>
-          internal_networks:
-            - private
-
     ```
 
-enabled: true, netflow_host: 0.0.0.0 ve netflow_port: (hangi portu dinleceyecekseniz.)
-
-4.Filebeat'i başlatma:
-    
+4.  **Filebeat'i Başlatma:**
+    Gerekli panoları ve şablonları yükleyin, ardından Filebeat servisini başlatın.
     ```bash
     sudo filebeat setup
-    sudo service filebeat start
+    sudo systemctl start filebeat
+    sudo systemctl enable filebeat
     ```
 
+5.  **Verileri Kontrol Etme:**
+    Tarayıcınızda `http://localhost:5601` adresine giderek Kibana'ya erişin. "Dashboards" bölümünden verilerinizi görüntüleyebilirsiniz.
 
-5. Verilerin gelip gelmediğini kontrol etme:
-   http://(your_ip_address):5601/app/home#/tutorial/netflowLogs sitesine gidip 5. aşamada test edebilirsiniz.
+---
 
-
-Daha sonrasında ElastikSearch'te dashboard'a gidip verilerinizi görebilirsiniz.
-
-## 🤝 Katkıda Bulunma
+### Katkıda Bulunma
 
 Projenin geliştirilmesine katkıda bulunmak isterseniz, lütfen aşağıdaki adımları izleyin:
 
@@ -108,15 +102,12 @@ Projenin geliştirilmesine katkıda bulunmak isterseniz, lütfen aşağıdaki ad
 4.  Dalı yükleyin: `git push origin ozellik/yeni-ozellik-adi`
 5.  Bir çekme isteği (pull request) açın.
 
-## 📜 Lisans
+---
+
+### Lisans
 
 Bu proje, MIT Lisansı ile lisanslanmıştır.
 
 ---
 
 **Geliştirici:** Yunus Emre Dere
-**Teşekkürler:** Bu projede emeği geçen herkese teşekkürler.
-
-
-    
-
