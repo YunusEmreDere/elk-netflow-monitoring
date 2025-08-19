@@ -1,17 +1,17 @@
-#Proje Adı:
+## Proje Adı:
 ELK Stack ile Netflow Trafiğini izleme
 
-#Özellikler:
+## Özellikler:
 -Routerdan gelen netflow verilerini Filebeat kullanarak porttan alır
 -ElastikSearch ve Kibana kullanılarak bu veriler görselleştirilir.
 -ElasticSearch üzerinden filtrelemeler ile istenilen şekilde kullanılabilinir.
 
-#Bu projeyi çalıştırmak için gerekli olanlar:
+## Bu projeyi çalıştırmak için gerekli olanlar:
 * [Docker](https://docs.docker.com/get-docker/)
 * [Docker Compose](https://docs.docker.com/compose/install/)
 * Git (Kodları klonlamak için)
 
-#Kurulum:
+## Kurulum:
 1.  Bu depoyu (repository) yerel makinenize klonlayın:
     ```bash
     git clone https://github.com/YunusEmreDere/elk-netflow-monitoring
