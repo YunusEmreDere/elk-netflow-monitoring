@@ -52,7 +52,10 @@ Bu depo, Docker Compose kullanarak Elasticsearch ve Kibana'yı kurmak ve Filebea
     sudo nano /etc/filebeat/filebeat.yml
     ```
     ```yaml
-    # ... dosyanın sonuna ekleyin
+
+    reload.enabled: true
+
+    reload.period: 10s
 
     setup.kibana:
       hosts: ["localhost:5601"]
@@ -77,6 +80,9 @@ Bu depo, Docker Compose kullanarak Elasticsearch ve Kibana'yı kurmak ve Filebea
         var:
           netflow_host: 0.0.0.0
           netflow_port: 2055
+          internal_networks:
+            - private
+
     ```
 
 4.  **Filebeat'i Başlatma:**
